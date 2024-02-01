@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap" rel="stylesheet">
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="main.js"></script>
+    <style>
+      .title {
+        font-family: 'Single Day';
+      }
+      .counter input {
+        width: 50px;
+        border: 0;
+        line-height: 30px;
+        font-size: 20px;
+        text-align: center;
+        background: #3b82f6;
+        color: #fff;
+        appearance: none;
+        outline: 0;
+      }
+      .counter span {
+        display: block;
+        font-size: 25px;
+        padding: 0 10px;
+        cursor: pointer;
+        color: #3b82f6;
+        user-select: none;
+      }
+      #snackbar {
+        visibility: hidden; /* Hidden by default. Visible on click */
+        min-width: 250px; /* Set a default minimum width */
+        margin-left: -125px; /* Divide value of min-width by 2 */
+        background-color: #333; /* Black background color */
+        color: #fff; /* White text color */
+        text-align: center; /* Centered text */
+        border-radius: 2px; /* Rounded borders */
+        padding: 16px; /* Padding */
+        position: fixed; /* Sit on top of the screen */
+        z-index: 1; /* Add a z-index if needed */
+        margin: auto;
+        bottom: 30px; /* 30px from the bottom */
+      }
+
+      /* Show the snackbar when clicking on a button (class added with JavaScript) */
+      #snackbar.show {
+        visibility: visible; /* Show the snackbar */
+        /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+        However, delay the fade out process for 2.5 seconds */
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      /* Animations to fade the snackbar in and out */
+      @-webkit-keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+      }
+
+      @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+      }
+
+      @-webkit-keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+      }
+
+      @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+      }
+    </style>
+    <title>Thermal</title>
+  </head>
+  <body>
+    <!-- Global Container -->
+    <div class="flex flex-col items-center justify-center min-h-screen bg-slate-100">
+      <!-- Use a button to open the snackbar -->
+
+      <!-- The actual snackbar -->
+      <div id="snackbar">Order sent! We will contact you about your order as soon as possible!</div>
+
+      <!-- Title -->
+      <div class="h-32  text-6xl title">
+        Thermal Paper
+      </div>
+
+      <!-- Card Container -->
+      <div
+        class="flex flex-col p-6 m-3 space-y-10 bg-white rounded-2xl shadow-2xl md:flex-row md:space-y-0 md:space-x-10 md:m-0 md:p-16"
+      >
+        <!-- Image Div -->
+        <div>
+          <img
+            src="images/thermal-paper-roll.jpeg"
+            alt=""
+            class="mx-auto duration-200 w-60 hover:scale-105 rounded-2xl"
+          />
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col space-y-6">
+          <!-- Label & Title Container -->
+          <div class="flex flex-col mb-4 space-y-3 text-center md:text-left">
+            <div>
+              <div
+                class="inline-block px-3 py-1 text-sm text-white bg-black rounded-full"
+              >
+                Free Shipping
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div class="max-w-sm text-2xl font-medium">
+              Thermische kassarol 80x80x12 - Box of 50
+            </div>
+            <!-- Price Container -->
+            <div class="flex flex-col mb-4 space-y-3 text-center md:text-left">
+              <p class="line-through">$19.99</p>
+              <p class="text-5xl font-bold">$10.99</p>
+              <p class="text-sm font-light text-gray-400">
+                This offer is valid until this stock lasts!
+              </p>
+            </div>
+            
+            <!-- Counter -->
+            <div class="counter flex">
+              <span class="down" onClick='decreaseCount(event, this)'>-</span>
+              <input id="order-value" type="text" value="1">
+              <span class="up" onClick='increaseCount(event, this)'>+</span>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phoneNumber" type="text" placeholder="Your Phone Number to contact you!">
+            </div>
+
+            <!-- Button Group -->
+            <div class="group">
+              <button
+                class="w-full transition-all duration-150 bg-blue-700 text-white border-b-8 border-b-blue-700 rounded-lg group-hover:border-t-8 group-hover:border-b-0 group-hover:bg-blue-700 group-hover:border-t-blue-700 group-hover:shadow-lg"
+                onclick="sendOrder()"
+                >
+                <div
+                  class="px-8 py-4 duration-150 bg-blue-500 rounded-lg group-hover:bg-blue-700"
+                >
+                  Send Order
+                </div>
+              </button>
+            </div>
+
+            <!-- Stock -->
+            <div class="flex items-center space-x-3 group">
+              <div
+                class="w-3 h-3 bg-green-400 rounded-full group-hover:animate-ping"
+              ></div>
+              <div class="text-sm">Contact us at +32 493126958</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
